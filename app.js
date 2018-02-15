@@ -1,25 +1,42 @@
+
 var express = require('express');
 var app = express();
-app.get('/',function (request, response) {
-  response.send('Hola mundo');
-});
 
-    app.get('/usuarios',function (request, response) {
-      response.send('accediendo a usuarios con el metodo get');
+    app.get('/',function (request, response) {
+    response.send('Hola mundo');
+    });
+
+    app.get('/',function (request, response) {
+    app.route('/usuarios')
+    .get(function (request, response) {
+        response.send('accediendo a usuarios con el metodo get');
+      });
+
+    app.post(function (request, response) {
+    })
+    .post(function (request, response) {
+        response.send('accediendo a usuarios con el metodo get');
     });
     
-    app.post('/usuarios',function (request, response) {
-      response.send('accediendo a usuarios con el metodo post');
+    app.put(function (request, response) {
+    })
+    .put(function (request, response) {
+        response.send('accediendo a usuarios con el metodo get');
     });
     
-    app.put('/usuarios',function (request, response) {
-      response.send('accediendo a usuarios con el metodo put');
+    app.delete(function (request, response) {
+    })
+    .delete(function (request, response) {
+        response.send('accediendo a usuarios con el metodo get');
     });
     
-    app.delete('/usuarios',function (request, response) {
-      response.send('accediendo a usuarios con el metodo delete');
+    
     });
     
-     app.listen(3000,function () {
-       console.log('corriendo en el puerto 3000');
-     }); 
+    app.listen(3000,function () {
+        console.log('corriendo en el puerto 3000');
+      }); 
+      
+
+
+

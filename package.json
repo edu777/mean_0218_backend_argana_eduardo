@@ -1,0 +1,19 @@
+{
+  "name": "mean_0218_backend_argana_eduardo",
+  "version": "1.0.0",
+  "description": "creando API REST Ful en Express\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[f",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://edy777@bitbucket.org/edy777/mean_0218_backend_argana_eduardo.git"
+  },
+  "author": "eduardo argana\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[A\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[E",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/edy777/mean_0218_backend_argana_eduardo#readme",
+  "dependencies": {
+    "express": "^4.16.2"
+  }
+}

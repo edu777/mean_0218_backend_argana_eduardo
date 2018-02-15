@@ -1,6 +1,11 @@
 
 var express = require('express');
+var morgan = require('morgan');
+
 var app = express();
+
+app.use(morgan('dev'));
+
 var usersRoute = require('./routes/users.route');
 
     app.get('/',function (request, response) {

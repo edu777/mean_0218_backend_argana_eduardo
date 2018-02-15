@@ -1,10 +1,16 @@
 
 var express = require('express');
 var morgan = require('morgan');
+var bodyParser = require('body-parser');
 
 var app = express();
 
-app.use(morgan('dev'));
+    app.use(morgan('dev'));
+
+    app.use(bodyParser.urlencoded({
+        extended: false
+        }));
+    app.use(bodyParser.json());
 
 var usersRoute = require('./routes/users.route');
 

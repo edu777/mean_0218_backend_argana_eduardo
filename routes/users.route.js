@@ -9,10 +9,12 @@ var router = express.Router();
     
     router.post('/',function (request, response) {
         response.send('accediendo a usuarios con el metodo post');
+        console.log('log post: ',request.body);
     });
     
     router.put('/',function (request, response) {
         response.send('accediendo a usuarios con el metodo put');
+        console.log('log post: ',request.body);
     });
     router.delete('/',function (request, response) {
         response.send('accediendo a usuarios con el metodo delete');

@@ -8,20 +8,21 @@ var userModel = require('../models/user.model');
        //{} creiterio de seleccion
        //{} que se va a mostrar id apellido
        //null a que se limita
-        userModel.find({},{},null,function(err,userList){
+        userModel.find({}, {}, null, function (err, userList) {
             if (err) {
-               return response.status(500).send({
-                   message:'Thera was a problem retrieving the user list ',
-                   error:err
-               }); 
-            }else{
-                response.send({message:'The user list has been retrieved',
-            data: userList
-            });
+              return response.status(500).send({
+                message: 'Thera was a problem retrieving the user list',
+                error: err
+              });
+            } else {
+              response.send({
+                message: 'The userlist has been retrieved',
+                data:userList
+              });
             }
         });
         
-      });
+    });
     
     router.post('/',function (request, response) {
        var newUser = new userModel(request.body);
@@ -101,7 +102,7 @@ var userModel = require('../models/user.model');
                     });
                  }
         }); 
-        // response.send('buscando un users con el metodo get');
+        
     });
 
     module.exports = router;

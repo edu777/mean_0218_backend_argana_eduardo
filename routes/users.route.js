@@ -20,7 +20,7 @@ var userModel = require('../models/user.model');
             });
             }
         });
-        //response.send('accediendo a usuarios con el metodo get');
+        
       });
     
     router.post('/',function (request, response) {
@@ -47,14 +47,30 @@ var userModel = require('../models/user.model');
        //     });
     });
     
-    router.put('/',function (request, response) {
-        response.send('accediendo a usuarios con el metodo put');
-        //console.log('log post: ',request.body);
-        console.log('log put: ',request.body);
+    router.put('/:id',function (request, response) {
+        userModel.findByIdAndUpdate(request.params.id,request.body,{
+            new: true
+        },function(err,userUpdated){
+            if(err){
+                return response.status(500)
+                .send({
+                    message:'The was a problem updating a user',
+                    error:err
+                     });
+             }else{
+        response.send({
+            message:'A user has been updated',
+            data:userUpdated
+        });
+        
+        }
+        });
     });
+    
     router.delete('/',function (request, response) {
         response.send('accediendo a usuarios con el metodo delete');
     });
+
 
     router.get('/:id', function (request, response) {
        //nombre

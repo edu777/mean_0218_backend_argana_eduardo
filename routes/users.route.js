@@ -5,7 +5,22 @@ var userModel = require('../models/user.model');
 
 
     router.get('/',function (request, response) {
-        response.send('accediendo a usuarios con el metodo get');
+       //{} creiterio de seleccion
+       //{} que se va a mostrar id apellido
+       //null a que se limita
+        userModel.find({},{},null,function(err,userList){
+            if (err) {
+               return response.status(500).send({
+                   message:'Thera was a problem retrieving the user list ',
+                   error:err
+               }); 
+            }else{
+                response.send({message:'The user list has been retrieved',
+            data: userList
+            });
+            }
+        });
+        //response.send('accediendo a usuarios con el metodo get');
       });
     
     router.post('/',function (request, response) {
@@ -41,8 +56,23 @@ var userModel = require('../models/user.model');
         response.send('accediendo a usuarios con el metodo delete');
     });
 
-    router.get('/find', function (request, response) {
-          response.send('buscando un users con el metodo get');
+    router.get('/:id', function (request, response) {
+       //nombre
+        //opciones
+        userModel.findById(request.params.id, {},null, function(err, userFound){
+            if(err){
+                return response.status(500).send({
+                    message:'The was a problem retrieving the user by id',
+                    error:err
+                 });
+                }else{
+                    response.send({
+                        message:'User found by id',
+                        data:userFound
+                    });
+                 }
+        }); 
+        // response.send('buscando un users con el metodo get');
     });
 
     module.exports = router;

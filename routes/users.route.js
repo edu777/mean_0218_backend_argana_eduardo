@@ -9,11 +9,27 @@ var userModel = require('../models/user.model');
       });
     
     router.post('/',function (request, response) {
-       // response.send('accediendo a usuarios con el metodo post');
-        //console.log('log post: ',request.body);
-        userModel.create(request.body, function (err, user) {
-
+       var newUser = new userModel(request.body);
+       newUser.save(function(err,userCreated){
+           if(err){
+               return response.status(500)
+               .send({
+                   message:'The was a problem registering user',
+                   error:err
+                })
+           }else{
+               response.send({message:'A new user has been created',
+               data:userCreated
             });
+           }
+           
+       }); 
+       
+        // response.send('accediendo a usuarios con el metodo post');
+        //console.log('log post: ',request.body);
+        //userModel.create(request.body, function (err, user) {
+
+       //     });
     });
     
     router.put('/',function (request, response) {

@@ -5,10 +5,16 @@ var userModel = require('../models/user.model');
 
 
     router.get('/',function (request, response) {
-       //{} creiterio de seleccion
+       //{} criterio de seleccion
        //{} que se va a mostrar id apellido, name
        //null a que se limita
-        userModel.find({}, {}, null, function (err, userList) {
+        userModel.find({
+            deleted:false
+        }, {
+            password:0,
+            deleted:0,
+            __v:0
+        }, null, function (err, userList) {
             if (err) {
               return response.status(500).send({
                 message: 'Thera was a problem retrieving the user list',

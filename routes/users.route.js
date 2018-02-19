@@ -6,7 +6,7 @@ var userModel = require('../models/user.model');
 
     router.get('/',function (request, response) {
        //{} creiterio de seleccion
-       //{} que se va a mostrar id apellido
+       //{} que se va a mostrar id apellido, name
        //null a que se limita
         userModel.find({}, {}, null, function (err, userList) {
             if (err) {
@@ -34,6 +34,8 @@ var userModel = require('../models/user.model');
                    error:err
                 })
            }else{
+              
+             
                response.send({message:'A new user has been created',
                data:userCreated
             });
@@ -44,8 +46,7 @@ var userModel = require('../models/user.model');
         // response.send('accediendo a usuarios con el metodo post');
         //console.log('log post: ',request.body);
         //userModel.create(request.body, function (err, user) {
-
-       //     });
+       // });
     });
     
     router.put('/:id',function (request, response) {

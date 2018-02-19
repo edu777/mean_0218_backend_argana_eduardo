@@ -40,13 +40,12 @@ var userModel = require('../models/user.model');
                    error:err
                 })
            }else{
-              
-             
+               userCreated.speak();    
+
                response.send({message:'A new user has been created',
                data:userCreated
             });
-           }
-           
+           }  
        }); 
        
         // response.send('accediendo a usuarios con el metodo post');
@@ -90,8 +89,7 @@ var userModel = require('../models/user.model');
         
                 }
          });
-
-        });
+    });
 
     router.get('/:id', function (request, response) {
        //nombre

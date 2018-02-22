@@ -2,6 +2,9 @@
 var express = require('express');
 var router = express.Router();
 var userModel = require('../models/user.model');
+var  bcrypt  = require ('bcryptjs'); 
+var secretkeys = require('../secret.keys');
+
 //nos devuelve una lista
     router.get('/',function (request, response) {
        //{} criterio de seleccion
@@ -31,6 +34,8 @@ var userModel = require('../models/user.model');
     
     router.post('/',function (request, response) {
        var newUser = new userModel(request.body);
+       var hashedPassword = bcrypt.hashSync(request.body.password, secretkeys.salts);
+       newUser.password = hashedPassword;
        newUser.save(function(err,userCreated){
            if(err){
                return response.status(500)
@@ -46,11 +51,6 @@ var userModel = require('../models/user.model');
             });
            }  
        }); 
-       
-        // response.send('accediendo a usuarios con el metodo post');
-        //console.log('log post: ',request.body);
-        //userModel.create(request.body, function (err, user) {
-       // });
     });
     
     router.put('/:id',function (request, response) {

@@ -6,6 +6,14 @@ var mongoose = require('mongoose');
 
 var app = express();
 
+app.use(function(request, response, next){
+    response.header('Access-Control-Allow-origin', 'http://localhost:4200');
+    response.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETED');
+    response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content_type, Accept');
+    next();
+    });  
+
+  
     mongoose.connect('mongodb://localhost/exampledb');
 
     mongoose.connection.on('error',function () {

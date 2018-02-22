@@ -2,7 +2,7 @@
 var express = require('express');
 var router = express.Router();
 var userModel = require('../models/user.model');
-
+//nos devuelve una lista
 
     router.get('/',function (request, response) {
        //{} criterio de seleccion
@@ -75,21 +75,21 @@ var userModel = require('../models/user.model');
     });
 
     router.delete('/:id', function (request, response) {
-        userModel.findByIdAndRemove(request.params.id, function(err,userDeleted){
-            if(err){
+        userModel.findByIdAndRemove(request.params.id, function (err, userDeleted) {
+            if (err) {
                 return response.status(500).send({
-                    message:'The was a problem deleting a user',
-                    error:err
-                 });
-                }else{
-                    response.send({
-                        message: 'A user has been deleted', 
-                        data:userDeleted 
-                    });
-        
-                }
-         });
+                    message: 'Thera was a problem deleting a user',
+                    error: err
+                });
+            } else {
+                response.send({
+                    message: 'A user has been deleted',
+                    data: userDeleted
+                });
+            }
+        }); 
     });
+        
 
     router.get('/:id', function (request, response) {
        //nombre

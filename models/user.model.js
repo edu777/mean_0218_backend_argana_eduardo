@@ -50,4 +50,7 @@ var userSchema = mongoose.Schema({
   userSchema.methods.speak = function () {
     console.log('Hi my name is : ' + this.name + '. How are you?');
   };
+
+
+
 module.exports = mongoose.model('User', userSchema); 

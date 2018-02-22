@@ -3,7 +3,6 @@ var express = require('express');
 var router = express.Router();
 var userModel = require('../models/user.model');
 //nos devuelve una lista
-
     router.get('/',function (request, response) {
        //{} criterio de seleccion
        //{} que se va a mostrar id apellido, name
@@ -43,7 +42,7 @@ var userModel = require('../models/user.model');
                userCreated.speak();    
 
                response.send({message:'A new user has been created',
-               data:userCreated
+               data:userCreated.getDtoUser()
             });
            }  
        }); 
@@ -67,7 +66,7 @@ var userModel = require('../models/user.model');
              }else{
         response.send({
             message:'A user has been updated',
-            data:userUpdated
+            data:userUpdated.getDtoUser()
         });
         
         }
@@ -84,7 +83,7 @@ var userModel = require('../models/user.model');
             } else {
                 response.send({
                     message: 'A user has been deleted',
-                    data: userDeleted
+                    data: userDeleted.getDtoUser()
                 });
             }
         }); 
@@ -103,7 +102,7 @@ var userModel = require('../models/user.model');
                 }else{
                     response.send({
                         message:'User found by id',
-                        data:userFound
+                        data:userFound.getDtoUser()
                     });
                  }
         }); 

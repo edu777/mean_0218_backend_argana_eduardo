@@ -54,22 +54,33 @@ var userModel = require('../models/user.model');
     });
     
     router.put('/:id',function (request, response) {
-        userModel.findByIdAndUpdate(request.params.id,request.body,{
-            new: true
-        },function(err,userUpdated){
-            if(err){
-                return response.status(500)
-                .send({
-                    message:'The was a problem updating a user',
-                    error:err
-                     });
-             }else{
-        response.send({
-            message:'A user has been updated',
-            data:userUpdated.getDtoUser()
-        });
-        
-        }
+        userModel.findOne({
+            _id:request.params.id,
+            deleted:false
+        },function(err,userFound){
+            if(err)
+                return response.status(500).send({
+                message:'There was a problem to find the user, error server',
+                error:err    
+            });
+            if(!userFound)
+            return response,status(404).send({
+                message:'There was a problem to find the user, invalid id',
+                error:''
+            });
+            for(var propiedad in request.body)
+            userFound[propiedad]=request.body[propiedad];
+            userFound.save(function(error,userUpdated){
+                if(error)
+                return response.status(500).send({
+                message:'There was a problem to update the user, error serve',
+                error:error  
+                 });
+                 response.send({
+                    message:'The user has been updated',
+                    data: userUpdated.getDtoUser()
+                });
+            }); 
         });
     });
 
@@ -80,11 +91,11 @@ var userModel = require('../models/user.model');
         },function(err,userFound){
             if(err)
                 return response.status(500).send({
-                message:'There was a problem to delete the user, error server',
+                message:'There was a problem to delete the user, error serve',
                 error:err    
             });
             if(!userFound)
-            return response,status(404).send({
+            return response(404).send({
                 message:'There was a problem to get the user (invalid id)',
                 error:''
             });
@@ -94,7 +105,7 @@ var userModel = require('../models/user.model');
             userFound.save(function (error,userUpdated){
                 if(error)
                 return response.status(500).send({
-                message:'There was a problem to delete the user, error server',
+                message:'There was a problem to delete the user, error serve',
                 error:error  
             });
             response.send({

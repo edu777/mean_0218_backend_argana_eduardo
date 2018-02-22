@@ -85,55 +85,65 @@ var userModel = require('../models/user.model');
     });
 
     router.delete('/:id', function (request, response) {
-        userModel.findOne({
-            _id:request.params.id,
-            deleted:false
-        },function(err,userFound){
-            if(err)
-                return response.status(500).send({
-                message:'There was a problem to delete the user, error serve',
-                error:err    
-            });
-            if(!userFound)
-            return response(404).send({
-                message:'There was a problem to get the user (invalid id)',
-                error:''
-            });
-            userFound.deleted=true;
+            userModel.findOne({
+                _id:request.params.id,
+                deleted:false
+            },function(err,userFound){
+                if(err)
+                    return response.status(500).send({
+                    message:'There was a problem to delete the user, error serve',
+                    error:err    
+                });
+                if(!userFound)
+                return response.status(404).send({
+                    message:'There was a problem to get the user (invalid id)',
+                    error:''
+                });
+                userFound.deleted=true;
 
 
-            userFound.save(function (error,userUpdated){
-                if(error)
-                return response.status(500).send({
-                message:'There was a problem to delete the user, error serve',
-                error:error  
-            });
-            response.send({
-                message:'The user has been deleted',
-                data: userUpdated.getDtoUser()
+                userFound.save(function (error,userUpdated){
+                    if(error)
+                    return response.status(500).send({
+                    message:'There was a problem to delete the user, error serve',
+                    error:error  
+                });
+                response.send({
+                    message:'The user has been deleted',
+                    data: userUpdated.getDtoUser()
+                });
             });
         });
-    });
     });
         
 
     router.get('/:id', function (request, response) {
        //nombre
         //opciones
-        userModel.findById(request.params.id, {},null, function(err, userFound){
-            if(err){
+        userModel.findOne({
+            _id:request.params.id,
+            deleted:false
+        },{
+            __v:0,
+            password:0,
+            deleted:0
+        },null,function(err,userFound){
+            if(err)
                 return response.status(500).send({
-                    message:'The was a problem retrieving the user by id',
-                    error:err
-                 });
-                }else{
-                    response.send({
-                        message:'User found by id',
-                        data:userFound.getDtoUser()
-                    });
-                 }
-        }); 
-        
+                message:'There was a problem to find the user, server error',
+                error:err    
+            });
+            if(!userFound)
+            return response.status(404).send({
+                message:'There was a problem to find the user, invalid id',
+                error:''
+             });
+             response.send({
+                 message:'User retrieved',
+                 data:userFound
+             })
+        });
+            
     });
 
     module.exports = router;

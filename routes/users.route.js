@@ -34,8 +34,10 @@ var secretkeys = require('../secret.keys');
     
     router.post('/',function (request, response) {
        var newUser = new userModel(request.body);
+       if (request.body.password) {
        var hashedPassword = bcrypt.hashSync(request.body.password, secretkeys.salts);
        newUser.password = hashedPassword;
+       }
        newUser.save(function(err,userCreated){
            if(err){
                return response.status(500)

@@ -3,6 +3,9 @@ var router = express.Router();
 var userModel = require('../models/user.model');
 var bcrypt = require('bcryptjs');
 
+var jsonwebtoken = require('jsonwebtoken');
+var secretkeys = require('../secret.keys');
+
 router.post('/login', function (request, response) {
     var query = {
     deleted: false,
@@ -25,12 +28,20 @@ userModel.findOne(query, function (err, userFound) {
         message: 'unauthorized access, invalid password',
         error: null
       });
+      var tokenEncoded = jsonwebtoken.sign({
+        userid: userFound._id,
+        type: userFound.type
+      }, secretkeys.token, {
+          expiresIn: 60 * 3
+        });
+
     return response.send({
       auth: true,
-      token: 'this is my test token'
+      token: tokenEncoded
     });
   });
 });
+
 
 router.get('/logout', function (request, response) {
   response.send({

@@ -30,7 +30,7 @@ var articleSchema = mongoose.Schema({
     console.log('Hi my name is : ' + this.name + '. How are you?');
   };
   
-  articleSchema.methods.getDtoAticle=function(){
+  articleSchema.methods.getDtoArticle=function(){
     var articleDTO = {
       _id:this.id,
       title:this.title,

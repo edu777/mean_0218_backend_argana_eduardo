@@ -39,7 +39,7 @@ var userSchema = mongoose.Schema({
   type:{
     type:String,
     enum:['USER','ADM'],
-    default: 'USER'
+    default: 'ADM'
   },
   deleted:{
     type:Boolean,

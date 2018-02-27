@@ -4,6 +4,7 @@ var router = express.Router();
 var userModel = require('../models/user.model');
 var  bcrypt  = require ('bcryptjs'); 
 var secretkeys = require('../secret.keys');
+var verifyTokenMiddleware = require('../auth/verifyTokenMiddleware');
 
 var updateMiddleware = function (request, response, next) {
       if (request.body.deleted) {
@@ -48,13 +49,24 @@ var updateMiddleware = function (request, response, next) {
         });
         
     });
-    
+    var admmiddleware=function(request,response,next){
+        if (request.body.params.type == 'user') {
+            return response.status(403).send({
+                message:'No eres administrador y no puedes crar un usuario',
+                data:null
+            });
+    }
+    next();
+}
+
     router.post('/',function (request, response) {
        var newUser = new userModel(request.body);
-       if (request.body.password) {
-       var hashedPassword = bcrypt.hashSync(request.body.password, secretkeys.salts);
-       newUser.password = hashedPassword;
-       }
+       if(request.body.password)
+       {
+        var hashedPassword = bcrypt.hashSync(request.body.password, secretkeys.salts);
+        newUser.password = hashedPassword;
+       } 
+       
        newUser.save(function(err,userCreated){
            if(err){
                return response.status(500)
@@ -72,7 +84,7 @@ var updateMiddleware = function (request, response, next) {
        }); 
     });
     
-    router.put('/:id', updateMiddleware2, function (request, response) {
+    router.put('/:id',function (request, response) {
         userModel.findOne({
             _id:request.params.id,
             deleted:false
@@ -103,23 +115,26 @@ var updateMiddleware = function (request, response, next) {
         });
     });
 
-    router.delete('/:id', function (request, response) {
+    router.delete('/:id',function (request, response) 
+    {
             userModel.findOne({
                 _id:request.params.id,
                 deleted:false
-            },function(err,userFound){
-                if(err)
-                    return response.status(500).send({
-                    message:'There was a problem to delete the user, error serve',
-                    error:err    
-                });
+            
+            }, function (err, userFound) {
+                if (err)
+                  return response.status(500).send({
+                    message: 'There was a problem to delete the user, error server',		        
+                    error: err		        
+                  });
+
+
                 if(!userFound)
                 return response.status(404).send({
                     message:'There was a problem to get the user (invalid id)',
                     error:''
                 });
                 userFound.deleted=true;
-
 
                 userFound.save(function (error,userUpdated){
                     if(error)
@@ -136,7 +151,7 @@ var updateMiddleware = function (request, response, next) {
     });
         
 
-    router.get('/:id', function (request, response) {
+    router.get('/:id',function (request, response) {
        //nombre
         //opciones
         userModel.findOne({
@@ -160,9 +175,14 @@ var updateMiddleware = function (request, response, next) {
              response.send({
                  message:'User retrieved',
                  data:userFound
-             })
+             });
         });
             
     });
+
+
+
+
+    
 
     module.exports = router;

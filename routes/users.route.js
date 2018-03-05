@@ -5,6 +5,42 @@ var userModel = require('../models/user.model');
 var  bcrypt  = require ('bcryptjs'); 
 var secretkeys = require('../secret.keys');
 var verifyTokenMiddleware = require('../auth/verifyTokenMiddleware');
+var Client = require('node-rest-client').Client;
+
+var client = new Client();
+var randomuser = 'https://randomuser.me/api/?results=10&nat=us';
+router.get('/seed', function (request, response) {
+    var client = new Client();
+    client.get(randomuser, function (userSeed) {
+        var arrayUser = [];
+        for (var i = 0; i < userSeed.results.length; i++) {
+            var userse = {
+                name: userSeed.results[i].name.first,
+                lastname: userSeed.results[i].name.last,
+                username: userSeed.results[i].login.username,
+                email: userSeed.results[i].email,
+                password: userSeed.results[i].login.password,
+                avatar: userSeed.results[i].picture.medium,
+            };
+            if (userse.password) {
+                var hashedPassword = bcrypt.hashSync(userse.password, secretkeys.salt);
+                userse.password = hashedPassword;
+            };
+            arrayUser.push(userse);
+        };
+        userModel.create(arrayUser, function (err, userCreated) {
+            if (err)
+                return response.status(500).send({
+                    message: 'There was a problem registering ther user',
+                    error: err
+                });
+            response.send({
+                message: 'A new user has been created',
+                data: userCreated
+            });
+        })
+    });
+});
 
 var updateMiddleware = function (request, response, next) {
       if (request.body.deleted) {
@@ -181,7 +217,34 @@ var updateMiddleware = function (request, response, next) {
     });
 
 
-
+    router.get('/:seed',function (request, response) {
+        //nombre
+         //opciones
+         userModel.findOne({
+             _id:request.params.id,
+             deleted:false
+         },{
+             __v:0,
+             password:0,
+             deleted:0
+         },null,function(err,userFound){
+             if(err)
+                 return response.status(500).send({
+                 message:'There was a problem to find the user, server error',
+                 error:err    
+             });
+             if(!userFound)
+             return response.status(404).send({
+                 message:'There was a problem to find the user, invalid id',
+                 error:''
+              });
+              response.send({
+                  message:'User retrieved',
+                  data:userFound
+              });
+         });
+             
+     });
 
     
 

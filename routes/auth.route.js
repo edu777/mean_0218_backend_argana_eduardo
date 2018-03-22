@@ -34,7 +34,7 @@ userModel.findOne(query, function (err, userFound) {
         type: userFound.type,
         //correo:userFound.email
       }, secretkeys.token, {
-          expiresIn: 60 * 2
+          expiresIn: 60 * 5
         });
 
     return response.send({
@@ -44,22 +44,16 @@ userModel.findOne(query, function (err, userFound) {
   });
 });
 
-router.get('/logout',veryfyTokenMiddleware,function (request, response) {
+router.get('/logout',function (request, response) {
   response.send({
-    message: 'testing logout',
     auth: false,
     token: null
   });
 });
 
-router.get('/me',function (request, response) {
-  response.send({
-    auth:false,
-    token:null
-  });
-});
+
 //192.168.1.33:300/users
-router.get('/me',veryfyTokenMiddleware,function (request, response) {
+router.get('/me', veryfyTokenMiddleware,function (request, response) {
   userModel.findOn({
     _id:request.params.userid,
     deleted:false

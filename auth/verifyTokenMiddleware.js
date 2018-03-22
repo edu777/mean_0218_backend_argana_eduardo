@@ -2,6 +2,7 @@ var jsonwebtoken = require('jsonwebtoken');
 var secretkeys = require ('../secret.keys');
 
 var verifyToken = function (request, response, next) {
+  console.log('headers in verifyToken: ',request.headers);
   var tokenEncoded = request.headers['auth-access-token'];
   if (!tokenEncoded)
     return response.status(403).send({

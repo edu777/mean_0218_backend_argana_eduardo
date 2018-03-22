@@ -5,21 +5,22 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 
 /*Routes declaration*/
-var articleRoute = require('./routes/article.route');
+
 var usersRoute = require('./routes/users.route');
+var articlesRoute = require('./routes/articles.route');
 var authRoute = require('./routes/auth.route');
 
 var app = express();
 
 app.use(function(request, response, next){
-    response.header('Access-Control-Allow-origin', 'http://localhost:4200');
+    response.header('Access-Control-Allow-origin', '*');
     response.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETED');
-    response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content_type, Accept');
+    response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content_type, Content-Type, Accept, auth-access-token');
     next();
     });  
 
   
-    mongoose.connect('mongodb://localhost/exampledb');
+    mongoose.connect('mongodb://localhost/desarrolloweb');
 
     mongoose.connection.on('error',function () {
     console.log('error..............');
@@ -37,9 +38,10 @@ app.use(function(request, response, next){
     app.use(bodyParser.json());
 
 /*Add routes to app*/
-    app.use('/article', articleRoute);
+   
     app.use('/users', usersRoute);
     app.use('/auth', authRoute);
+    app.use('/articles', articlesRoute);
 
     app.listen(3000,function () {
         console.log('corriendo en el puerto 3000');

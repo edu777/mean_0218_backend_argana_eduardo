@@ -1,31 +1,16 @@
 var express = require('express');
 var router = express.Router();
 var articleModel = require('../models/article.model');
+var userModel = require('../models/user.model')
 
-var secretkeys = require('../secret.keys');
+var selectUserPopulated={
+    path:'author',
+    select:'-_id -username -avatar -type -deleted -password -__v'
+};
 
-var updateMiddleware = function (request, response, next) {
-      if (request.body.deleted) {
-        return response.status(403).send({
-          message: "No debes tratar de actualizar este campo"
-        });
-      } else {
-        next();
-      }
-    };
-    
-    var updateMiddleware2 = function (request, response, next) {
-      delete request.body.password;
-      delete request.body.type;
-      delete request.body.deleted;
-      next();
-    };
 
 //nos devuelve una lista
     router.get('/',function (request, response) {
-       //{} criterio de seleccion
-       //{} que se va a mostrar id apellido, name
-       //null a que se limita
         articleModel.find({
             deleted:false
         }, {
@@ -38,35 +23,50 @@ var updateMiddleware = function (request, response, next) {
                 error: err
               });
             } else {
-              response.send({
-                message: 'The article list has been retrieved',
-                data:articleList
-              });
+                userModel.populate(articleList, selectUserPopulated,function(errPopulating,
+                    populatedArticleList){
+                        if(errPopulating)
+                        return response.status(500).send({
+                            message: 'Thera was a problem retrieving the article list',
+                            error: errPopulating
+                        });
+                        response.send({
+                            message: 'The article list has been retrieved',
+                            data:articleList
+                        });
+                    });
             }
         });
-        
     });
     
     router.post('/',function (request, response) {
        var newArticle = new articleModel(request.body);
+       
        newArticle.save(function(err,articleCreated){
            if(err){
                return response.status(500)
                .send({
-                   message:'The was a problem registering article',
-                   error:err
-                })
+                   message:'There was a problem registering the article',
+               error:err
+                });
            }else{
-               articleCreated.speak();    
-
-               response.send({message:'A new article has been created',
-               data:articleCreated.getDtoArticle()
-            });
-           }  
-       }); 
+            userModel.populate(articleCreated, selectUserPopulated,function(errPopulating,
+                populatedArticle){
+                    if(errPopulating)
+                    return response.status(500).send({
+                        message: 'Thera was a problem retrieving the article list',
+                        error: errPopulating
+                    }); 
+                    response.send({
+                        message:'A new article has been created',
+                        data:articleCreated.getDtoArticle()
+                    });
+                });
+            }
+        });
     });
     
-    router.put('/:id', updateMiddleware2, function (request, response) {
+    router.put('/:id', function (request, response) {
         articleModel.findOne({
             _id:request.params.id,
             deleted:false
@@ -89,9 +89,17 @@ var updateMiddleware = function (request, response, next) {
                 message:'There was a problem to update the article, error serve',
                 error:error  
                  });
-                 response.send({
-                    message:'The article has been updated',
-                    data: userUpdated.getDtoArticle()
+                 userModel.populate(articleUpdated, selectUserPopulated,function(errPopulating,
+                populatedArticle){
+                    if(errPopulating)
+                    return response.status(500).send({
+                        message: 'Thera was a problem retrieving the article',
+                        error: errPopulating
+                    }); 
+                    response.send({
+                        message:'Article retrieved',
+                        data:articleCreated.getDtoArticle()
+                    });
                 });
             }); 
         });
@@ -150,14 +158,20 @@ var updateMiddleware = function (request, response, next) {
                 message:'There was a problem to find the article, invalid id',
                 error:''
              });
-             response.send({
-                 message:'Article retrieved',
-                 data:articleFound
-             })
+             userModel.populate(articleFound, selectUserPopulated,function(errPopulating,
+                populatedArticle){
+                    if(errPopulating)
+                    return response.status(500).send({
+                        message: 'Thera was a problem retrieving the article list',
+                        error: errPopulating
+                    }); 
+                    response.send({
+                        message:'Article retrieved',
+                        data:articleCreated.getDtoArticle()
+                    });
+                });
         });
             
     });
 
     module.exports = router;
-
-    //

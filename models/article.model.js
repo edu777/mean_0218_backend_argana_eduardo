@@ -26,10 +26,6 @@ var articleSchema = mongoose.Schema({
   }
 });
 
-  articleSchema.methods.speak = function () {
-    console.log('Hi my name is : ' + this.name + '. How are you?');
-  };
-  
   articleSchema.methods.getDtoArticle=function(){
     var articleDTO = {
       _id:this.id,

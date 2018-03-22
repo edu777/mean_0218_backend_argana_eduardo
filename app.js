@@ -18,7 +18,6 @@ app.use(function(request, response, next){
     response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content_type, Content-Type, Accept, auth-access-token');
     next();
     });  
-
   
     mongoose.connect('mongodb://localhost/desarrolloweb');
 
